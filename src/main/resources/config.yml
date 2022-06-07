@@ -1,0 +1,182 @@
+# Gamers Club Lobby Plugin Configuration File
+#
+#
+#
+# Global plugin settings.
+settings:
+
+  db-name: "gclp"
+  # Sets the name of the database for logging mutes and such.
+
+  prefix: "[GamersClubLP]"
+  # The plugin prefix.
+
+# These are options that are shared throughout the plugin.
+general:
+  background: "LIGHT_GRAY_STAINED_GLASS_PANE"
+  # The type of block to use for the background of Java Edition GUIs.
+
+  lobby:
+    x: 0.5
+    y: 80
+    z: 0.5
+    pitch: 180
+    yaw: 0
+    world: "world"
+
+
+  exit:
+    # Options relating to the 'exit' button on UIs.
+    java:
+      item: "BARRIER"
+      name: "§cExit"
+      lore: "§bCloses this GUI."
+
+    bedrock:
+      image: "https://cdn.discordapp.com/attachments/647834210811510784/976630261544542248/barrier.png"
+      name: "§4Exit"
+
+  no-item: "BARRIER"
+  # The type of block that represents placeholders.
+
+  no-name: "§b"
+  # The name of the placeholder.
+
+  no-permission: "§cYou do not have permission to run this command!"
+  # Message sent to clients when they lack the permission node required to run said command.
+
+  non-console-cmd: "§cThis command cannot be executed from console!"
+  # Message sent when the command sender is the console.
+
+  build-disabled: "§cYou're not allowed to place blocks here!"
+  break-disabled: "§cYou're not allowed to break blocks here!"
+
+  # Messages sent to clients when running a server switch command.
+  anarchy-msg: "§bConnecting to the anarchy server.."
+  lobby-msg: "§bTeleported back to spawn!"
+
+# Message sent to the player when they run /help.
+help:
+  - "§b§lGamersClub§r §c§lHelp menu"
+  - "§bBelow are a list of useful commands you can run."
+  - "§r"
+  - "§b/anarchy§r - §8Sends you to the anarchy server."
+  - "§b/help§r - §8Shows you this help prompt."
+  - "§b/lobby§r - §8Sends you to the main lobby area."
+  - "§b/ss§r - §8Opens the server selector UI."
+  - "§bYou can also use the 'Server Selector' in your hotbar."
+
+#---------------------------
+#       GUI Settings
+#---------------------------
+# Below are the options related to the various GUIs and Bedrock forms that are sent to clients.
+# `item:` options only take a valid material.
+# `name:` options use § for color codes unless specifically stated.
+# `lore1:` `lore2:` options use § for color codes unless specifically stated.
+# `image:` options are used for the images shown on Bedrock forms.
+# `java:` and `bedrock:` options are there to differentiate between the two.
+
+
+#---------------------------
+#     Server Selector UI
+#---------------------------
+server-selector:
+  item: "COMPASS"
+  name: "§9§lServer Selector"
+  desc: "Tap on any of the buttons to connect to said server!"
+  lore1: "§bJava: Right Click to open"
+  lore2: "§bBedrock: Right Click/tap to open"
+
+  # Used when displaying the secret admin button on the bedrock form. Shows up when player has permission.
+  admin-name: "§4Administrator UI"
+  admin-image: "https://media.discordapp.net/attachments/647834210811510784/983086080733634560/rory.png"
+
+  anarchy:
+  # Options relating to the 'anarchy' option.
+    java:
+      item: "IRON_SWORD"
+      name: "§bGamers Club Anarchy"
+      lore1: "§9The first gamemode offered here."
+      lore2: "§9Anarchy with no rules."
+
+    bedrock:
+      image: "https://cdn.discordapp.com/attachments/647834210811510784/976628036189429800/iron_sword.png"
+      name: "§9Anarchy"
+
+  lobby:
+  # Options relating to the 'lobby' option.
+    java:
+      item: "GRASS_BLOCK"
+      name: "§aLobby"
+      lore: "§9Warps you back to the lobby."
+
+    bedrock:
+      image: "https://cdn.discordapp.com/attachments/647834210811510784/976627585775714324/grass_block.png"
+      name: "§2Lobby"
+
+#---------------------------
+#      Mute UI/Command
+#---------------------------
+mute:
+  name: "§c§lMute a player"
+  item: "PAPER"
+  date-name: "§bSet a duration.."
+  reason-name: "§bSet a reason.."
+
+  player-menu: "Player to be muted:"
+  time-input: "Days to be muted for:"
+  time-menu: "Reason for muting:"
+  click-lore: "§bClick to mute this player!"
+
+  console-mute-name: "[CONSOLE]"
+  # The name used when a mute was issued by the console.
+
+  errors:
+    invalid-int: "§cPlease specify a valid number!"
+    usage: "§cUsage: /mute (player) [duration] {reason}"
+
+#---------------------------
+#     Unmute UI/Command
+#---------------------------
+unmute:
+  name: "§c§lUnmute a player"
+  click-lore: "§bClick to unmute this player!"
+  unmuted-player: "§bYou have been unmuted!"
+  mute-expired: "§9Your mute has expired, so you have been unmuted!"
+
+  player-menu: "§r§fPlayer to be unmuted:"
+
+  usage: "§cUsage: /unmute (player)"
+
+
+#---------------------------
+#    Maintenance Command
+#---------------------------
+maintenance:
+  usage: "§cUsage: /maintenance (on/off)"
+  kick-msg: "§cThe lobby is currently under maintenance, please check back later!"
+
+
+
+#---------------------------
+#     Administrator UI
+#---------------------------
+admin-gui:
+  name: "§c§lAdministrator GUI"
+  srv-select-lore: "§bClick to open the Server Selector UI."
+
+  java:
+
+    mute:
+      item: "LIGHT_BLUE_WOOL"
+      name: "§4Mute a player"
+      lore: "§bClick to select a player to mute."
+
+    unmute:
+      item: "LIME_WOOL"
+      name: "§aUnmute a player"
+      lore: "§bClick to select a player to unmute."
+
+  bedrock:
+    mute: "§9Mute a player"
+    unmute: "§9Unmute a player"

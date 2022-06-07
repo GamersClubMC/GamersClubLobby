@@ -1,0 +1,64 @@
+name: GamersClubLobbyPlugin
+version: 2.0.0
+author: GamersClub
+main: me.gamersclub.lobby.GamersClubMain
+api-version: 1.13
+
+prefix: GamersClubLP
+softdepend: [floodgate]
+
+description: "A plugin for the Gamers Club Lobby Server."
+website: "https://gamersclub.gq"
+
+permissions:
+  gclp.bypass-block-breaking:
+    default: op
+  gclp.bypass-block-placing:
+    default: op
+  gclp.bypass-item-dropping:
+    default: op
+  gclp.reload:
+    default: op
+  gclp.mute:
+    default: op
+  gclp.unmute:
+    default: op
+  gclp.admin:
+    default: op
+  gclp.maintenance:
+    default: op
+  gclp.maintenance.bypass:
+    default: op
+
+commands:
+  help:
+    aliases: [?]
+    description: "Replaces the built in help command."
+    usage: "/help"
+  anarchy:
+    description: "Command used to join the anarchy server."
+    usage: "/anarchy"
+  lobby:
+    aliases: [hub]
+    description: "Command that sends you to the main area."
+    usage: "/lobby"
+  gclp:
+    description: "The main command."
+    usage: "/gclp [args]"
+  serverselector:
+    aliases: [ss]
+    description: "Opens the server selector GUI."
+    usage: "/serverselector"
+
+  mute:
+    permission: "gclp.mute"
+    permission-message: "§cYou do not have permission to run this command!"
+    usage: "/mute (player) [duration] {reason}"
+  unmute:
+    permission: "gclp.unmute"
+    permission-message: "§cYou do not have permission to run this command!"
+    usage: "/unmute (player)"
+  maintenance:
+    permission: "gclp.maintenance"
+    permission-message: "§cYou do not have permission to run this command!"
+    usage: "/maintenance (on/off)"
