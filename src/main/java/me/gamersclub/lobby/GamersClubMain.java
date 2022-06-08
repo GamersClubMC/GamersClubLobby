@@ -55,6 +55,7 @@ public class GamersClubMain extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerPreLoginListener(), this);
         this.getServer().getPluginManager().registerEvents(new TabCompleteListener(), this);
+        this.getServer().getPluginManager().registerEvents(new LecternBookListener(), this);
 
 
         //Register messengers

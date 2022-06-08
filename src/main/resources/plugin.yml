@@ -29,6 +29,8 @@ permissions:
     default: op
   gclp.maintenance.bypass:
     default: op
+  gclp.lectern.bypass:
+    default: op
 
 commands:
   help:
