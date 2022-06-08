@@ -46,7 +46,7 @@ public class MaintenanceCommand implements CommandExecutor {
                             playerlist[p].kickPlayer(ConfigManager.getConfigString("maintenance.kick-msg"));
                     }
                     playersAlreadyKicked = true;
-                    sender.sendMessage("§Successfully kicked all players with the reason: " + ConfigManager.getConfigString("maintenance.kick-msg"));
+                    sender.sendMessage("§bSuccessfully kicked all players with the reason: " + ConfigManager.getConfigString("maintenance.kick-msg"));
                 }
 
             }
