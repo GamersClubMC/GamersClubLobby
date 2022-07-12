@@ -4,8 +4,7 @@ import me.gamersclub.lobby.util.configuration.ConfigManager;
 import me.gamersclub.lobby.util.items.ItemStackFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
-import org.geysermc.cumulus.SimpleForm;
-import org.geysermc.cumulus.response.SimpleFormResponse;
+import org.geysermc.cumulus.form.SimpleForm;
 import org.geysermc.floodgate.api.FloodgateApi;
 
 import java.util.UUID;
@@ -45,24 +44,24 @@ public class AdminMenu {
     }
 
     public void AdminForm(UUID uuid) {
-        FloodgateApi.getInstance().sendForm(uuid,
-            SimpleForm.builder()
-                .title(ConfigManager.getConfigString("admin-gui.name"))
-                .button(ConfigManager.getConfigString("admin-gui.bedrock.mute"))
-                .button(ConfigManager.getConfigString("admin-gui.bedrock.unmute"))
-                .button(ConfigManager.getConfigString("general.exit.bedrock.name"))
-                .responseHandler((form, responseData) -> {
-                    SimpleFormResponse response = form.parseResponse(responseData);
-                    if (!response.isCorrect()) {
-                        return;
-                    }
-                    if (response.getClickedButtonId() == 0) {
-                        MuteGUI.MuteForm(uuid);
-                    }
-                    else if (response.getClickedButtonId() == 1) {
-                        MuteGUI.UnmuteForm(uuid);
-                    }
-                })
-        );
+        SimpleForm.Builder form = SimpleForm.builder()
+            .title(ConfigManager.getConfigString("admin-gui.name"))
+            .button(ConfigManager.getConfigString("admin-gui.bedrock.mute"))
+            .button(ConfigManager.getConfigString("admin-gui.bedrock.unmute"))
+            .button(ConfigManager.getConfigString("general.exit.bedrock.name"));
+
+        form.closedOrInvalidResultHandler(() -> {
+        });
+
+        form.validResultHandler(response -> {
+            if (response.clickedButtonId() == 0) {
+                MuteGUI.MuteForm(uuid);
+            }
+            else if (response.clickedButtonId() == 1) {
+                MuteGUI.UnmuteForm(uuid);
+            }
+        });
+
+        FloodgateApi.getInstance().sendForm(uuid,form);
     }
 }

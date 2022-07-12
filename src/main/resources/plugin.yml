@@ -1,5 +1,5 @@
 name: GamersClubLobbyPlugin
-version: 2.0.0
+version: 2.0.1
 author: GamersClub
 main: me.gamersclub.lobby.GamersClubMain
 api-version: 1.13

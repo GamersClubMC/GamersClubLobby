@@ -21,7 +21,7 @@ public class SQLiteStorageManager {
     public static void setupStorage() {
         try {
             Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + "plugins/GamersClubLobbyPlugin/" + ConfigManager.getConfigString("settings.db-name") + ".sqlite");
+            connection = DriverManager.getConnection("jdbc:sqlite:" + "plugins/GamersClubLobbyPlugin/" + ConfigManager.getConfigString("settings.db-name") + ".db");
 
             Statement createTables = connection.createStatement();
             createTables.executeUpdate("CREATE TABLE IF NOT EXISTS `UUIDCache` (UUID char(36), Username varchar(16), LastUpdated varchar(500))");

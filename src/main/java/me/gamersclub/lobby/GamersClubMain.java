@@ -17,7 +17,7 @@ public class GamersClubMain extends JavaPlugin {
     @Override
     public void onEnable() {
         log.info("*******************************");
-        log.info("Gamers Club Lobby Plugin v2.0.0");
+        log.info("Gamers Club Lobby Plugin v2.0.1");
         log.info("*******************************");
 
         //Check if stuff exists

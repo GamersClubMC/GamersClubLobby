@@ -13,12 +13,13 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.geysermc.cumulus.CustomForm;
-import org.geysermc.cumulus.response.CustomFormResponse;
+import org.geysermc.cumulus.form.CustomForm;
 import org.geysermc.floodgate.api.FloodgateApi;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class MuteGUI {
     private final ItemStackFactory item = new ItemStackFactory();
@@ -95,7 +96,7 @@ public class MuteGUI {
                  .open(player);
     }
 
-    //fancy mute thing for bedrock, credit to GeyserAdminTools for the base code
+    //credit to GeyserAdminTools for the original code, I just went in and updated it for floodgate 2.2.0
     public static void MuteForm(UUID uuid) {
         GamersClubLogger log = new GamersClubLogger();
 
@@ -103,77 +104,75 @@ public class MuteGUI {
         List<String> names = Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
         String[] playerList = names.toArray(new String[0]);
 
-        FloodgateApi.getInstance().sendForm(uuid,
-            CustomForm.builder()
-                .title(ConfigManager.getConfigString("mute.name"))
-                .dropdown(ConfigManager.getConfigString("mute.player-menu"), playerList)
-                .input(ConfigManager.getConfigString("mute.time-input"))
-                .input(ConfigManager.getConfigString("mute.time-menu"))
+        CustomForm.Builder form = CustomForm.builder()
+            .title(ConfigManager.getConfigString("mute.name"))
+            .dropdown(ConfigManager.getConfigString("mute.player-menu"), playerList)
+            .input(ConfigManager.getConfigString("mute.time-input"))
+            .input(ConfigManager.getConfigString("mute.time-menu"));
 
-                .responseHandler((form, responseData) -> {
-                    CustomFormResponse response = form.parseResponse(responseData);
-                    if (!response.isCorrect())
-                        return;
+        form.closedOrInvalidResultHandler(() -> {
+        });
 
-                    int clickedIndex = response.getDropdown(0);
-                    String day = response.getInput(1);
-                    String endDate;
+        form.validResultHandler(response -> {
+            int clickedIndex = response.asDropdown(0);
+            String day = response.valueAt(1);
+            String endDate;
 
-                    try {
-                        assert day != null;
-                        endDate = LocalDate.now().plusDays(Long.parseLong(day)).toString();
-                    }
-                    catch (Exception e) {
-                        assert player != null;
-                        player.sendMessage(ChatColor.RED + "Invalid number!");
-                        return;
-                    }
-                    String reason = response.getInput(2);
-                    String name = names.get(clickedIndex);
-                    Player target = Bukkit.getPlayer(name);
-                    String startDate = LocalDate.now().toString();
-                    //database code
-                    assert target != null;
-                    SQLiteMuteManager.addMute(target,player,reason,startDate,endDate);
+            try {
+                assert day != null;
+                endDate = LocalDate.now().plusDays(Long.parseLong(day)).toString();
+            }
+            catch (Exception e) {
+                assert player != null;
+                player.sendMessage(ChatColor.RED + "Invalid number!");
+                return;
+            }
+            String reason = response.valueAt(2);
+            String name = names.get(clickedIndex);
+            Player target = Bukkit.getPlayer(name);
+            String startDate = LocalDate.now().toString();
+            //database code
+            assert target != null;
+            SQLiteMuteManager.addMute(target,player,reason,startDate,endDate);
 
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&9Player &r&f"+ target.getName() + "&r&9 was muted for: &r&c" + reason + "&r&9 until: &r" + endDate + "&r&9."));
-                    log.info("&9Player &r&f"+ target.getName() + " &9was muted with reason: &r&c" + reason + "&r&9 until: &f" + endDate + "&r&9.");
-                })
-        );
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&9Player &r&f"+ target.getName() + "&r&9 was muted for: &r&c" + reason + "&r&9 until: &r" + endDate + "&r&9."));
+            log.info("&9Player &r&f"+ target.getName() + " &9was muted with reason: &r&c" + reason + "&r&9 until: &f" + endDate + "&r&9.");
+        });
+
+        FloodgateApi.getInstance().sendForm(uuid,form);
     }
 
-    //also credit to GeyserAdminTools
+    //also credit to GeyserAdminTools, also updated for floodgate 2.2.0
     public static void UnmuteForm(UUID uuid) {
         GamersClubLogger log = new GamersClubLogger();
         Player player = Bukkit.getPlayer(uuid);
 
         String[] playerlist = SQLiteStorageManager.getUsernames().toArray(new String[0]);
 
-        FloodgateApi.getInstance().sendForm(uuid,
-            CustomForm.builder()
-                .title(ConfigManager.getConfigString("unmute.name"))
-                .dropdown(ConfigManager.getConfigString("unmute.player-menu"), playerlist)
-                .responseHandler((form, responseData) -> {
-                    CustomFormResponse response = form.parseResponse(responseData);
-                    if (!response.isCorrect()) {
-                        return;
-                    }
+        CustomForm.Builder form = CustomForm.builder()
+            .title(ConfigManager.getConfigString("unmute.name"))
+            .dropdown(ConfigManager.getConfigString("unmute.player-menu"), playerlist);
 
-                    if (playerlist.length == 0) {
-                        return;
-                    }
+        form.closedOrInvalidResultHandler(() -> {
+        });
 
-                    int clickedIndex = response.getDropdown(0);
-                    String name = SQLiteStorageManager.getUsernames().get(clickedIndex);
-                    Player target = Bukkit.getPlayer(name);
+        form.validResultHandler(response -> {
+            if (playerlist.length == 0) {
+                return;
+            }
 
-                    SQLiteMuteManager.deleteMute(target.getUniqueId());
-                    Bukkit.getPlayer(uuid).sendMessage(ChatColor.translateAlternateColorCodes('&', "&9Player &r&f"+ target.getName() + "&r&9 was unmuted!"));
-                    log.info("&9Player &r&f"+ target.getName() + " &9was unmuted.");
-                    target.sendMessage(ChatColor.translateAlternateColorCodes('&',ConfigManager.getConfigString("unmute.unmuted-player")));
+            int clickedIndex = response.asDropdown(0);
+            String name = SQLiteStorageManager.getUsernames().get(clickedIndex);
+            Player target = Bukkit.getPlayer(name);
 
-                    SQLiteLogManager.addLog(target.getUniqueId().toString(),target.getName(),player.getUniqueId().toString(),player.getName(),"(No reason specified)", LocalDate.now().toString(),"UNMUTE");
-                })
-        );
+            SQLiteMuteManager.deleteMute(target.getUniqueId());
+            Bukkit.getPlayer(uuid).sendMessage(ChatColor.translateAlternateColorCodes('&', "&9Player &r&f"+ target.getName() + "&r&9 was unmuted!"));
+            log.info("&9Player &r&f"+ target.getName() + " &9was unmuted.");
+            target.sendMessage(ChatColor.translateAlternateColorCodes('&',ConfigManager.getConfigString("unmute.unmuted-player")));
+
+            SQLiteLogManager.addLog(target.getUniqueId().toString(),target.getName(),player.getUniqueId().toString(),player.getName(),"(No reason specified)", LocalDate.now().toString(),"UNMUTE");
+        });
+
+        FloodgateApi.getInstance().sendForm(uuid,form);
     }
 }

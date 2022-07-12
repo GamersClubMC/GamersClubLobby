@@ -8,6 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.geysermc.floodgate.api.FloodgateApi;
 import org.jetbrains.annotations.NotNull;
 
 public class ServerSelectorCommand implements CommandExecutor {
@@ -26,7 +27,6 @@ public class ServerSelectorCommand implements CommandExecutor {
                 ServerSelector.ServerSelectorForm(player.getUniqueId());
             else
                 player.openInventory(srv.ServerSelectorUI());
-
         }
         return true;
     }

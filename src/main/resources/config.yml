@@ -20,7 +20,7 @@ general:
     x: 0.5
     y: 80
     z: 0.5
-    pitch: 180
+    pitch: 90
     yaw: 0
     world: "world"
 
@@ -64,7 +64,7 @@ help:
   - "§b/help§r - §8Shows you this help prompt."
   - "§b/lobby§r - §8Sends you to the main lobby area."
   - "§b/ss§r - §8Opens the server selector UI."
-  - "§bYou can also use the 'Server Selector' in your hotbar."
+  - "§bYou can also use the 'Server Selector' item in your hotbar."
 
 #---------------------------
 #       GUI Settings

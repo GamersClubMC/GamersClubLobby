@@ -5,9 +5,7 @@ import me.gamersclub.lobby.util.items.ItemStackFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.geysermc.cumulus.SimpleForm;
-import org.geysermc.cumulus.response.SimpleFormResponse;
+import org.geysermc.cumulus.form.SimpleForm;
 import org.geysermc.cumulus.util.FormImage;
 import org.geysermc.floodgate.api.FloodgateApi;
 
@@ -45,9 +43,6 @@ public class ServerSelector {
         return inv;
     }
 
-
-
-    @SuppressWarnings("deprecation")
     public static void ServerSelectorForm(UUID uuid) {
         Player player = Bukkit.getPlayer(uuid);
         boolean isAdmin = player.hasPermission("gclp.admin");
@@ -72,40 +67,29 @@ public class ServerSelector {
         String exitButton = ConfigManager.getConfigString("general.exit.bedrock.name");
         String exitImg = ConfigManager.getConfigString("general.exit.bedrock.image");
 
+        SimpleForm.Builder form = SimpleForm.builder()
+            .title(title)
+            .content(content)
+            .optionalButton(adminButton, FormImage.Type.URL,adminImg,isAdmin) //rory!
+            .button(lobbyButton, FormImage.Type.URL,lobbyImg)
+            .button(anarchyButton,FormImage.Type.URL,anarchyImg)
+            .button(exitButton,FormImage.Type.URL, exitImg);
 
-        FloodgateApi.getInstance().sendForm(uuid,
-            SimpleForm.builder()
-                .title(title)
-                .content(content)
-                .optionalButton(adminButton, FormImage.Type.URL,adminImg,isAdmin) //rory!
-                .button(lobbyButton, FormImage.Type.URL,lobbyImg)
-                .button(anarchyButton,FormImage.Type.URL,anarchyImg)
-                .button(exitButton,FormImage.Type.URL, exitImg)
-                .responseHandler((form, responseData) -> {
-                    SimpleFormResponse response = form.parseResponse(responseData);
-                    if (!response.isCorrect())
-                        return;
+        form.closedOrInvalidResultHandler(() -> {
+        });
 
-                    if (isAdmin) {
-                        if (response.getClickedButtonId() == 0) {
-                            player.performCommand("gclp admin");
-                        }
-                        else if (response.getClickedButtonId() == 1) {
-                            player.performCommand("lobby");
-                        }
-                        else if (response.getClickedButtonId() == 2) {
-                            player.performCommand("anarchy");
-                        }
+        form.validResultHandler(response -> {
+            if (response.clickedButtonId() == 0) {
+                player.performCommand("gclp admin");
+            }
+            else if (response.clickedButtonId() == 1) {
+                player.performCommand("lobby");
+            }
+            else if (response.clickedButtonId() == 2) {
+                player.performCommand("anarchy");
+            }
+        });
 
-                    }
-                    else {
-                        if (response.getClickedButtonId() == 0) {
-                            player.performCommand("lobby");
-                        }
-                        else if (response.getClickedButtonId() == 1) {
-                            player.performCommand("anarchy");
-                        }
-                    }
-                }));
+        FloodgateApi.getInstance().sendForm(uuid,form);
     }
 }
