@@ -1,18 +1,17 @@
 package me.gamersclub.lobby.listeners;
 
+import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent;
 import me.gamersclub.lobby.storage.SQLiteMuteManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.server.TabCompleteEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-public class TabCompleteListener implements Listener {
+public class AsyncTabCompleteListener implements Listener {
 
     @EventHandler
-    public void onTabComplete(TabCompleteEvent event) {
+    public void onAsyncTabComplete(AsyncTabCompleteEvent event) {
         if (event.getBuffer().contains("/gclp ")) {
             event.setCompletions(new ArrayList<>(Arrays.asList("anarchy", "help", "lobby")));
         } else if (event.getBuffer().contains("/help ")) {
@@ -26,13 +25,7 @@ public class TabCompleteListener implements Listener {
         } else if (event.getBuffer().contains("/maintenance ")) {
             event.setCompletions(new ArrayList<>(Arrays.asList("on", "off")));
         } else if (event.getBuffer().contains("/unmute ")) {
-            List<String> mutedList = SQLiteMuteManager.getUsernames();
-
-            if (mutedList.isEmpty()) {
-                event.setCancelled(true);
-            } else {
-                event.setCompletions(mutedList);
-            }
+            event.setCompletions(SQLiteMuteManager.getUsernames());
         }
     }
 }

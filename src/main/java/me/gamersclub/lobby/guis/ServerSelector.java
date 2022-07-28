@@ -2,6 +2,7 @@ package me.gamersclub.lobby.guis;
 
 import me.gamersclub.lobby.util.configuration.ConfigManager;
 import me.gamersclub.lobby.util.items.ItemStackFactory;
+import me.gamersclub.lobby.util.logging.GamersClubLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -9,10 +10,10 @@ import org.geysermc.cumulus.form.SimpleForm;
 import org.geysermc.cumulus.util.FormImage;
 import org.geysermc.floodgate.api.FloodgateApi;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 public class ServerSelector {
+    private static final GamersClubLogger log = new GamersClubLogger();
     private final ItemStackFactory item = new ItemStackFactory();
 
     public Inventory ServerSelectorUI() {
@@ -22,22 +23,18 @@ public class ServerSelector {
             inv.setItem(i,item.background());
         }
 
-        ArrayList<String> anarchyLore = new ArrayList<>();
         String anarchyItem = ConfigManager.getConfigString("server-selector.anarchy.java.item");
         String anarchyName = ConfigManager.getConfigString("server-selector.anarchy.java.name");
-        anarchyLore.add(ConfigManager.getConfigString("server-selector.anarchy.java.lore1"));
-        anarchyLore.add(ConfigManager.getConfigString("server-selector.anarchy.java.lore2"));
 
         String lobbyItem = ConfigManager.getConfigString("server-selector.lobby.java.item");
         String lobbyName = ConfigManager.getConfigString("server-selector.lobby.java.name");
-        String lobbyLore = ConfigManager.getConfigString("server-selector.lobby.java.lore");
 
         String noItem = ConfigManager.getConfigString("general.no-item");
         String noName = ConfigManager.getConfigString("general.no-name");
 
         inv.setItem(8, item.exit());
-        inv.setItem(11,item.createItem(anarchyItem,anarchyName,anarchyLore));
-        inv.setItem(13,item.createItem(lobbyItem,lobbyName,lobbyLore));
+        inv.setItem(11,item.createItem(anarchyItem,anarchyName, ConfigManager.getConfigStringList("server-selector.anarchy.java.lore")));
+        inv.setItem(13,item.createItem(lobbyItem,lobbyName, ConfigManager.getConfigStringList("server-selector.lobby.java.lore")));
         inv.setItem(15,item.createItem(noItem,noName));
 
         return inv;
@@ -73,23 +70,18 @@ public class ServerSelector {
             .optionalButton(adminButton, FormImage.Type.URL,adminImg,isAdmin) //rory!
             .button(lobbyButton, FormImage.Type.URL,lobbyImg)
             .button(anarchyButton,FormImage.Type.URL,anarchyImg)
-            .button(exitButton,FormImage.Type.URL, exitImg);
-
-        form.closedOrInvalidResultHandler(() -> {
-        });
-
-        form.validResultHandler(response -> {
+            .button(exitButton,FormImage.Type.URL, exitImg)
+            .validResultHandler(response -> {
             if (response.clickedButtonId() == 0) {
                 player.performCommand("gclp admin");
-            }
-            else if (response.clickedButtonId() == 1) {
+            } else if (response.clickedButtonId() == 1) {
                 player.performCommand("lobby");
-            }
-            else if (response.clickedButtonId() == 2) {
+            } else if (response.clickedButtonId() == 2) {
                 player.performCommand("anarchy");
             }
         });
 
         FloodgateApi.getInstance().sendForm(uuid,form);
+        log.debug("Server Selector form sent to Bedrock player: " + player.getName());
     }
 }

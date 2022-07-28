@@ -2,6 +2,7 @@ package me.gamersclub.lobby.guis;
 
 import me.gamersclub.lobby.util.configuration.ConfigManager;
 import me.gamersclub.lobby.util.items.ItemStackFactory;
+import me.gamersclub.lobby.util.logging.GamersClubLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.geysermc.cumulus.form.SimpleForm;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 public class AdminMenu {
     private final ItemStackFactory item = new ItemStackFactory();
+    private final GamersClubLogger log = new GamersClubLogger();
 
     public Inventory adminMenu() {
         Inventory adminMenu = Bukkit.createInventory(null, 27, ConfigManager.getConfigString("admin-gui.name"));
@@ -50,18 +52,15 @@ public class AdminMenu {
             .button(ConfigManager.getConfigString("admin-gui.bedrock.unmute"))
             .button(ConfigManager.getConfigString("general.exit.bedrock.name"));
 
-        form.closedOrInvalidResultHandler(() -> {
-        });
-
         form.validResultHandler(response -> {
             if (response.clickedButtonId() == 0) {
                 MuteGUI.MuteForm(uuid);
-            }
-            else if (response.clickedButtonId() == 1) {
+            } else if (response.clickedButtonId() == 1) {
                 MuteGUI.UnmuteForm(uuid);
             }
         });
 
         FloodgateApi.getInstance().sendForm(uuid,form);
+        log.debug("Admin form sent to Bedrock player: " + Bukkit.getPlayer(uuid).getName());
     }
 }

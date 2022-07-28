@@ -96,9 +96,9 @@ public class MuteGUI {
                  .open(player);
     }
 
-    //credit to GeyserAdminTools for the original code, I just went in and updated it for floodgate 2.2.0
+    //credit to GeyserAdminTools for the part of the code that mutes, I just went in and updated it for floodgate 2.2.0
     public static void MuteForm(UUID uuid) {
-        GamersClubLogger log = new GamersClubLogger();
+        final GamersClubLogger log = new GamersClubLogger();
 
         Player player = Bukkit.getPlayer(uuid);
         List<String> names = Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
@@ -110,24 +110,27 @@ public class MuteGUI {
             .input(ConfigManager.getConfigString("mute.time-input"))
             .input(ConfigManager.getConfigString("mute.time-menu"));
 
-        form.closedOrInvalidResultHandler(() -> {
-        });
-
         form.validResultHandler(response -> {
             int clickedIndex = response.asDropdown(0);
             String day = response.valueAt(1);
+            String reason;
             String endDate;
 
             try {
                 assert day != null;
                 endDate = LocalDate.now().plusDays(Long.parseLong(day)).toString();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 assert player != null;
                 player.sendMessage(ChatColor.RED + "Invalid number!");
                 return;
             }
-            String reason = response.valueAt(2);
+
+            if (!response.valueAt(2).equals("") && !response.valueAt(2).equals(null)) {
+                reason = response.valueAt(2);
+            } else {
+                reason = "(No reason provided)";
+            }
+
             String name = names.get(clickedIndex);
             Player target = Bukkit.getPlayer(name);
             String startDate = LocalDate.now().toString();
@@ -140,11 +143,12 @@ public class MuteGUI {
         });
 
         FloodgateApi.getInstance().sendForm(uuid,form);
+        log.debug("Mute form sent to Bedrock player: " + player.getName());
     }
 
     //also credit to GeyserAdminTools, also updated for floodgate 2.2.0
     public static void UnmuteForm(UUID uuid) {
-        GamersClubLogger log = new GamersClubLogger();
+        final GamersClubLogger log = new GamersClubLogger();
         Player player = Bukkit.getPlayer(uuid);
 
         String[] playerlist = SQLiteStorageManager.getUsernames().toArray(new String[0]);
@@ -152,9 +156,6 @@ public class MuteGUI {
         CustomForm.Builder form = CustomForm.builder()
             .title(ConfigManager.getConfigString("unmute.name"))
             .dropdown(ConfigManager.getConfigString("unmute.player-menu"), playerlist);
-
-        form.closedOrInvalidResultHandler(() -> {
-        });
 
         form.validResultHandler(response -> {
             if (playerlist.length == 0) {
@@ -174,5 +175,6 @@ public class MuteGUI {
         });
 
         FloodgateApi.getInstance().sendForm(uuid,form);
+        log.debug("Unmute form sent to Bedrock player: " + player.getName());
     }
 }

@@ -2,10 +2,9 @@ package me.gamersclub.lobby.util.player;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.Objects;
+import static me.gamersclub.lobby.GamersClubMain.plugin;
 
 public class ServerSwitcher {
 
@@ -13,6 +12,6 @@ public class ServerSwitcher {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Connect");
         out.writeUTF(server);
-        player.sendPluginMessage(Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("GamersClubLobbyPlugin")), "BungeeCord", out.toByteArray());
+        player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
     }
 }

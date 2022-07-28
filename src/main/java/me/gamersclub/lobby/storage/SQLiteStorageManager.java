@@ -2,8 +2,6 @@ package me.gamersclub.lobby.storage;
 
 import me.gamersclub.lobby.util.configuration.ConfigManager;
 import me.gamersclub.lobby.util.logging.GamersClubLogger;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
@@ -13,8 +11,6 @@ import java.util.List;
 @SuppressWarnings("CanBeFinal")
 public class SQLiteStorageManager {
     protected static Connection connection;
-
-    final static Plugin plugin = Bukkit.getPluginManager().getPlugin("GamersClubLobbyPlugin");
     final static GamersClubLogger log = new GamersClubLogger();
     static String console = ConfigManager.getConfigString("mute.console-mute-name");
 
@@ -30,7 +26,7 @@ public class SQLiteStorageManager {
             createTables.close();
         }
         catch (ClassNotFoundException | SQLException e) {
-            log.error("Error: " + e);
+            log.warn("Error: " + e);
         }
     }
 
@@ -38,7 +34,7 @@ public class SQLiteStorageManager {
         try {
             connection.close();
         } catch (SQLException e) {
-            log.error("Error: " + e);
+            log.warn("Error: " + e);
         }
     }
 
@@ -53,7 +49,7 @@ public class SQLiteStorageManager {
             rs.close();
         }
         catch (SQLException e) {
-            log.error("Error: " + e);
+            log.warn("Error: " + e);
         }
         return names;
     }

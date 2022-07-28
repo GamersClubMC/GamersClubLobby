@@ -11,6 +11,7 @@ import org.bukkit.profile.PlayerProfile;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class ItemStackFactory {
@@ -30,7 +31,7 @@ public class ItemStackFactory {
     }
 
     //item with multiple lines of lore
-    public ItemStack createItem(String material,String name,ArrayList<String> lore) {
+    public ItemStack createItem(String material, String name,List<String> lore) {
         ItemStack itemStack = new ItemStack(Objects.requireNonNull(Material.getMaterial(material)),1);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {

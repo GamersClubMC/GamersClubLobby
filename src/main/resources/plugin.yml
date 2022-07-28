@@ -1,11 +1,11 @@
 name: GamersClubLobbyPlugin
-version: 2.0.1
+version: 2.1.0
 author: GamersClub
 main: me.gamersclub.lobby.GamersClubMain
 api-version: 1.13
 
 prefix: GamersClubLP
-softdepend: [floodgate]
+depend: [floodgate]
 
 description: "A plugin for the Gamers Club Lobby Server."
 website: "https://gamersclub.gq"
@@ -30,6 +30,8 @@ permissions:
   gclp.maintenance.bypass:
     default: op
   gclp.lectern.bypass:
+    default: op
+  gclp.lookup:
     default: op
 
 commands:

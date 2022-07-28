@@ -9,7 +9,6 @@ import java.util.UUID;
 
 public class SQLiteLogManager extends SQLiteStorageManager {
 
-
     //adds log to database mod logs with moderator and target as people involved
     public static void addLog(String targetUUID,String targetUser,String modUUID,String modUser, String reason, String punishDate, String punishType) {
         try {
@@ -26,7 +25,7 @@ public class SQLiteLogManager extends SQLiteStorageManager {
             insert.executeUpdate();
         }
         catch (SQLException e) {
-            log.error("Error: " + e);
+            log.warn("Error: " + e);
         }
     }
 
@@ -45,7 +44,7 @@ public class SQLiteLogManager extends SQLiteStorageManager {
             insert.executeUpdate();
         }
         catch (SQLException e) {
-            log.error("Error: " + e);
+            log.warn("Error: " + e);
         }
     }
 
@@ -58,7 +57,7 @@ public class SQLiteLogManager extends SQLiteStorageManager {
             return results.getString(column);
         }
         catch (SQLException e) {
-            log.error("Error: " + e);
+            log.warn("Error: " + e);
         }
         return null;
     }

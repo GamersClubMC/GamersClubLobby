@@ -13,8 +13,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-
 public class PlayerJoinListener implements Listener {
     private final ItemStackFactory isf = new ItemStackFactory();
 
@@ -36,21 +34,15 @@ public class PlayerJoinListener implements Listener {
         Location spawn = new Location((Bukkit.getWorld(world)),x,y,z,pitch,yaw);
 
         //server selector strings
-        ArrayList<String> lore = new ArrayList<>();
         String item = ConfigManager.getConfigString("server-selector.item");
         String name = ConfigManager.getConfigString("server-selector.name");
-        String lore1 = ConfigManager.getConfigString("server-selector.lore1");
-        String lore2 = ConfigManager.getConfigString("server-selector.lore2");
-        lore.add(lore1);
-        lore.add(lore2);
-
 
         //warp to spawn
         player.teleport(spawn, PlayerTeleportEvent.TeleportCause.PLUGIN);
 
         //reset inv
         player.getInventory().clear();
-        player.getInventory().setItem(4,isf.createItem(item,name,lore));
+        player.getInventory().setItem(4,isf.createItem(item,name,ConfigManager.getConfigStringList("server-selector.lore")));
 
         //reset status effects
         player.getActivePotionEffects().clear();

@@ -21,12 +21,25 @@ import java.time.LocalDate;
 public class UnmuteCommand implements CommandExecutor {
     private final GamersClubLogger log = new GamersClubLogger();
     private String playerUnmute = ChatColor.translateAlternateColorCodes('&',ConfigManager.getConfigString("unmute.unmuted-player"));
+    private String reason;
 
     public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String s, String[] args) {
         if (command.getName().equalsIgnoreCase("unmute") && sender.hasPermission("gclp.unmute")) {
-            if(args.length != 1) {
+            if(args.length == 0) {
                 sender.sendMessage(ConfigManager.getConfigString("unmute.usage"));
                 return true;
+            }
+            if(args.length >= 2) {
+                reason = args[1];
+
+                if (args.length >= 3) {
+                    for (int i = 2; i < args.length; i++) {
+                        String cache = args[i];
+                        reason = reason.concat(" " + cache);
+                    }
+                }
+            } else {
+                reason = "(No reason specified)";
             }
 
             Player target = Bukkit.getPlayer(args[0]);
@@ -35,10 +48,6 @@ public class UnmuteCommand implements CommandExecutor {
             //Check if the player specified isn't online
             if (target == null) {
                 //check if we have the player in the uuid cache
-                if (!SQLiteUserCacheManager.cacheUsernameCheck(args[0])) {
-                    return true;
-                }
-                //use offline player if player was found in said cache
                 offlineTarget = SQLiteUserCacheManager.cacheUsernameGet(args[0]);
             }
 
@@ -48,25 +57,26 @@ public class UnmuteCommand implements CommandExecutor {
                 log.info("&9Player &r&f"+ args[0] + " &9was unmuted.");
 
                 if (sender instanceof ConsoleCommandSender) {
-                    SQLiteLogManager.addLog(target.getUniqueId().toString(),target.getName(),"(No reason specified)", LocalDate.now().toString(),"UNMUTE");
+                    SQLiteLogManager.addLog(offlineTarget.getUniqueId().toString(),args[0],reason, LocalDate.now().toString(),"UNMUTE");
                     return true;
                 }
 
                 Player mod = (Player) sender;
-                SQLiteLogManager.addLog(target.getUniqueId().toString(),target.getName(),mod.getUniqueId().toString(),mod.getName(),"(No reason specified)", LocalDate.now().toString(),"UNMUTE");
+                SQLiteLogManager.addLog(offlineTarget.getUniqueId().toString(),args[0],mod.getUniqueId().toString(),mod.getName(),reason, LocalDate.now().toString(),"UNMUTE");
             }
             else {
-                SQLiteMuteManager.deleteMute(target.getUniqueId());
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&9Player &r&f"+ target.getName() + "&r&9 was unmuted!"));
-                log.info("&9Player &r&f"+ target.getName() + " &9was unmuted.");
-                target.sendMessage(playerUnmute);
+                if (target != null) {
+                    SQLiteMuteManager.deleteMute(target.getUniqueId());
+                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&9Player &r&f"+ target.getName() + "&r&9 was unmuted!"));
+                    log.info("&9Player &r&f"+ target.getName() + " &9was unmuted.");
+                    target.sendMessage(playerUnmute);
 
-                Player mod = (Player) sender;
-
-                SQLiteLogManager.addLog(target.getUniqueId().toString(),target.getName(),mod.getUniqueId().toString(),mod.getName(),"(No reason specified)", LocalDate.now().toString(),"UNMUTE");
+                    Player mod = (Player) sender;
+                    SQLiteLogManager.addLog(target.getUniqueId().toString(),target.getName(),mod.getUniqueId().toString(),mod.getName(),reason, LocalDate.now().toString(),"UNMUTE");
+                    return true;
+                }
+                sender.sendMessage("§cThat player does not exist!");
             }
-
-
         }
         return true;
     }

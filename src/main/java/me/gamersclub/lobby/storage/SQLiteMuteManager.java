@@ -23,7 +23,7 @@ public class SQLiteMuteManager extends SQLiteStorageManager {
             statement.execute();
         }
         catch (SQLException e) {
-            log.error("Error: " + e);
+            log.warn("Error: " + e);
         }
     }
 
@@ -46,7 +46,7 @@ public class SQLiteMuteManager extends SQLiteStorageManager {
             return results.getString(column);
         }
         catch (SQLException e) {
-            log.error("Error: " + e);
+            log.warn("Error: " + e);
             e.printStackTrace();
         }
         return null;
@@ -79,7 +79,7 @@ public class SQLiteMuteManager extends SQLiteStorageManager {
             SQLiteLogManager.addLog(targetUUID,target.getName(),mutedByUUID,mutedBy.getName(),reason,startDate,"MUTE");
         }
         catch (SQLException e) {
-            log.error("Error: " + e);
+            log.warn("Error: " + e);
         }
     }
 
@@ -109,7 +109,7 @@ public class SQLiteMuteManager extends SQLiteStorageManager {
             SQLiteLogManager.addLog(targetUUID,target.getName(),mutedByUUID,mutedBy.getName(),reason,startDate,"MUTE");
         }
         catch (SQLException e) {
-            log.error("Error: " + e);
+            log.warn("Error: " + e);
         }
     }
 
@@ -140,7 +140,7 @@ public class SQLiteMuteManager extends SQLiteStorageManager {
             SQLiteLogManager.addLog(targetUniqueUID,targetUsername,mutedBy.getName(),mutedByUUID,reason,startDate,"MUTE");
         }
         catch (SQLException e) {
-            log.error("Error: " + e);
+            log.warn("Error: " + e);
         }
     }
 
@@ -169,7 +169,7 @@ public class SQLiteMuteManager extends SQLiteStorageManager {
             SQLiteLogManager.addLog(target.getUniqueId().toString(),target.getName(),reason,startDate,"MUTE");
         }
         catch (SQLException e) {
-            log.error("Error: " + e);
+            log.warn("Error: " + e);
 
         }
     }
@@ -198,7 +198,36 @@ public class SQLiteMuteManager extends SQLiteStorageManager {
             SQLiteLogManager.addLog(target.getUniqueId().toString(),username,reason,startDate,"MUTE");
         }
         catch (SQLException e) {
-            log.error("Error: " + e);
+            log.warn("Error: " + e);
+        }
+    }
+
+    /**
+     * Adds a mute associated with the Player's UUID.
+     * @param targetUUID Accepts a UUID
+     * @param targetUsername Accepts a string of maximum 16 characters
+     * @param reason Can be a maximum of 500 characters
+     * @param startDate Accepts a string formatted like '2022-01-01'
+     * @param endDate Accepts a string formatted like '2022-01-01'
+     */
+    public static void addConsoleMute(@NotNull UUID targetUUID,@NotNull String targetUsername, String reason, String startDate, String endDate) {
+        String targetUniqueUID = targetUUID.toString();
+        try {
+            String sql = "(UUID, USERNAME, REASON, MUTEDBY, MUTEDBYUUID, STARTDATE, ENDDATE) VALUES (?,?,?,?,?,?,?)";
+            PreparedStatement insert = connection.prepareStatement("INSERT OR REPLACE INTO `mutes` " + sql);
+            insert.setString(1, targetUniqueUID);
+            insert.setString(2, targetUsername);
+            insert.setString(3, reason);
+            insert.setString(4, console);
+            insert.setString(5, console);
+            insert.setString(6, startDate);
+            insert.setString(7, endDate);
+            insert.executeUpdate();
+
+            SQLiteLogManager.addLog(targetUniqueUID,targetUsername,reason,startDate,"MUTE");
+        }
+        catch (SQLException e) {
+            log.warn("Error: " + e);
         }
     }
 }

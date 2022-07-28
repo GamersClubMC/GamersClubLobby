@@ -1,15 +1,14 @@
 # Gamers Club Lobby Plugin Configuration File
 #
-#
-#
-# Global plugin settings.
+
+# Global plugin settings. Only more advanced options go here.
 settings:
 
   db-name: "gclp"
   # Sets the name of the database for logging mutes and such.
 
-  prefix: "[GamersClubLP]"
-  # The plugin prefix.
+  debug-mode: false
+  # Enable or disable debug logging into console.
 
 # These are options that are shared throughout the plugin.
 general:
@@ -24,6 +23,8 @@ general:
     yaw: 0
     world: "world"
 
+  # Whether to send whatever message a muted player tried to send to console/admins.
+  log-muted-player-messages: true
 
   exit:
     # Options relating to the 'exit' button on UIs.
@@ -55,6 +56,9 @@ general:
   anarchy-msg: "§bConnecting to the anarchy server.."
   lobby-msg: "§bTeleported back to spawn!"
 
+  tried-to-talk: "%s §ctried to talk, but is muted until§r %s §c!"
+  tried-to-talk-log: "§cTheir message: §r%s"
+
 # Message sent to the player when they run /help.
 help:
   - "§b§lGamersClub§r §c§lHelp menu"
@@ -72,7 +76,7 @@ help:
 # Below are the options related to the various GUIs and Bedrock forms that are sent to clients.
 # `item:` options only take a valid material.
 # `name:` options use § for color codes unless specifically stated.
-# `lore1:` `lore2:` options use § for color codes unless specifically stated.
+# `lore` options use § for color codes unless specifically stated. To add more lore, add another line, then a '- ""'.
 # `image:` options are used for the images shown on Bedrock forms.
 # `java:` and `bedrock:` options are there to differentiate between the two.
 
@@ -84,8 +88,9 @@ server-selector:
   item: "COMPASS"
   name: "§9§lServer Selector"
   desc: "Tap on any of the buttons to connect to said server!"
-  lore1: "§bJava: Right Click to open"
-  lore2: "§bBedrock: Right Click/tap to open"
+  lore:
+    - "§bJava: Right Click to open"
+    - "§bBedrock: Right Click/tap to open"
 
   # Used when displaying the secret admin button on the bedrock form. Shows up when player has permission.
   admin-name: "§4Administrator UI"
@@ -96,8 +101,9 @@ server-selector:
     java:
       item: "IRON_SWORD"
       name: "§bGamers Club Anarchy"
-      lore1: "§9The first gamemode offered here."
-      lore2: "§9Anarchy with no rules."
+      lore:
+        - "§9The first gamemode offered here."
+        - "§9Anarchy with no rules."
 
     bedrock:
       image: "https://cdn.discordapp.com/attachments/647834210811510784/976628036189429800/iron_sword.png"
@@ -108,7 +114,8 @@ server-selector:
     java:
       item: "GRASS_BLOCK"
       name: "§aLobby"
-      lore: "§9Warps you back to the lobby."
+      lore:
+        - "§9Warps you back to the lobby."
 
     bedrock:
       image: "https://cdn.discordapp.com/attachments/647834210811510784/976627585775714324/grass_block.png"
@@ -146,7 +153,7 @@ unmute:
 
   player-menu: "§r§fPlayer to be unmuted:"
 
-  usage: "§cUsage: /unmute (player)"
+  usage: "§cUsage: /unmute (player) [reason]"
 
 
 #---------------------------
