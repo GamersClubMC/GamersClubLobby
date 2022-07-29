@@ -16,7 +16,7 @@ public class BlockBreakListener implements Listener {
             event.setCancelled(true);
             Player player = Bukkit.getPlayer(event.getPlayer().getName());
             assert player != null;
-            player.sendMessage(ChatColor.RED + ConfigManager.getConfigString("general.break-disabled"));
+            player.sendMessage(ConfigManager.getConfigString("general.break-disabled"));
         }
     }
 }
