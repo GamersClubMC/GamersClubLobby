@@ -52,7 +52,6 @@ public class MuteGUI {
 
     public Inventory UnmuteUI() {
         Inventory unmuteInv = Bukkit.createInventory(null, 54, ConfigManager.getConfigString("unmute.name"));
-
         String[] mutedList = SQLiteStorageManager.getUsernames().toArray(new String[0]);
 
         //Fill in the top with the glass background.
@@ -66,7 +65,7 @@ public class MuteGUI {
                 break;
             }
 
-            ItemStack playerHead = item.createItem("PAPER",mutedList[p],ConfigManager.getConfigString("unmute.click-lore"));
+            ItemStack playerHead = item.createItem(ConfigManager.getConfigString("unmute.item"),mutedList[p],ConfigManager.getConfigString("unmute.click-lore"));
             unmuteInv.setItem(p+9, playerHead);
         }
         unmuteInv.setItem(8,item.exit());
@@ -77,7 +76,7 @@ public class MuteGUI {
      public void ReasonUI(Player player,Player target) {
         final String[] reason = new String[1];
 
-        //thank you wesjd for making this it's a lifesaver
+        //thank you wesjd for making the library it's a lifesaver
          new AnvilGUI.Builder()
                  .onClose(player1 -> reason[0] = "(No reason provided)")
                  .onComplete((player1, text) -> {
@@ -90,7 +89,7 @@ public class MuteGUI {
                      return AnvilGUI.Response.close();
                  })
                  .text("(No reason provided)")
-                 .itemLeft(new ItemStack(Objects.requireNonNull(Material.getMaterial(ConfigManager.getConfigString("mute.item")))))
+                 .itemLeft(new ItemStack(Objects.requireNonNull(Material.getMaterial(ConfigManager.getConfigString("mute.anvil-item")))))
                  .title(ConfigManager.getConfigString("mute.reason-name"))
                  .plugin(Bukkit.getPluginManager().getPlugin("GamersClubLobbyPlugin"))
                  .open(player);
@@ -125,7 +124,7 @@ public class MuteGUI {
                 return;
             }
 
-            if (!response.valueAt(2).equals("") && !response.valueAt(2).equals(null)) {
+            if (!response.valueAt(2).equals("") && response.valueAt(2) != null) {
                 reason = response.valueAt(2);
             } else {
                 reason = "(No reason provided)";

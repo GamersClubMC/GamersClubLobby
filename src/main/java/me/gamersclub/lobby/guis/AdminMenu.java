@@ -39,8 +39,8 @@ public class AdminMenu {
 
         adminMenu.setItem(8, item.exit());
         adminMenu.setItem(11,item.createItem(muteItem,muteName,muteLore));
-        adminMenu.setItem(13,item.createItem(unmuteItem,unmuteName, unmuteLore));
-        adminMenu.setItem(15,item.createItem(srvSelectItem,srvSelectName, srvSelectLore));
+        adminMenu.setItem(13,item.createItem(unmuteItem,unmuteName,unmuteLore));
+        adminMenu.setItem(15,item.createItem(srvSelectItem,srvSelectName,srvSelectLore));
 
         return adminMenu;
     }

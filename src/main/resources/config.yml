@@ -1,6 +1,8 @@
 # Gamers Club Lobby Plugin Configuration File
 #
-
+config-version: 3.0
+# The version of the config, DO NOT TOUCH!
+#
 # Global plugin settings. Only more advanced options go here.
 settings:
 
@@ -12,6 +14,7 @@ settings:
 
 # These are options that are shared throughout the plugin.
 general:
+
   background: "LIGHT_GRAY_STAINED_GLASS_PANE"
   # The type of block to use for the background of Java Edition GUIs.
 
@@ -126,9 +129,13 @@ server-selector:
 #---------------------------
 mute:
   name: "§c§lMute a player"
-  item: "PAPER"
+
+  fallback-item: "PAPER"
+  # The item to use when the plugin doesn't have a working player head system for that version (1.17 and below)
+
   date-name: "§bSet a duration.."
   reason-name: "§bSet a reason.."
+  anvil-item: "PAPER"
 
   player-menu: "Player to be muted:"
   time-input: "Days to be muted for:"
@@ -147,6 +154,7 @@ mute:
 #---------------------------
 unmute:
   name: "§c§lUnmute a player"
+  item: "PAPER"
   click-lore: "§bClick to unmute this player!"
   unmuted-player: "§bYou have been unmuted!"
   mute-expired: "§9Your mute has expired, so you have been unmuted!"

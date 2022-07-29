@@ -19,6 +19,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.time.LocalDate;
 
+import static me.gamersclub.lobby.GamersClubMain.isServer1_18_2OrAbove;
+
+@SuppressWarnings("ConstantConditions")
 public class InventoryClickListener implements Listener {
     private final MuteGUI mute = new MuteGUI();
     private final AdminMenu am = new AdminMenu();
@@ -35,44 +38,35 @@ public class InventoryClickListener implements Listener {
             event.setCancelled(true);
             if (event.getSlot() == 8) {
                 humanEntity.closeInventory();
-            }
-            else if (event.getSlot() == 11) {
+            } else if (event.getSlot() == 11) {
                 player.performCommand("anarchy");
                 humanEntity.closeInventory();
 
-            }
-            else if (event.getSlot() == 13) {
+            } else if (event.getSlot() == 13) {
                 player.performCommand("lobby");
                 humanEntity.closeInventory();
-            }
-            else if (event.getSlot() == 15) {
+            } else if (event.getSlot() == 15) {
                 player.teleport(new Location((Bukkit.getWorld("world")),0.5, 72, 0.5,135,60), PlayerTeleportEvent.TeleportCause.PLUGIN);
                 humanEntity.closeInventory();
-            }
-            else if (event.getSlot() == 26 && player.hasPermission("gclp.admin")) {
+            } else if (event.getSlot() == 26 && player.hasPermission("gclp.admin")) {
                 humanEntity.closeInventory();
                 humanEntity.openInventory(am.adminMenu());
             }
-        }
-        else if (event.getView().getTitle().equalsIgnoreCase(ConfigManager.getConfigString("admin-gui.name"))) {
+        } else if (event.getView().getTitle().equalsIgnoreCase(ConfigManager.getConfigString("admin-gui.name"))) {
             event.setCancelled(true);
             if (event.getSlot() == 8) {
                 humanEntity.closeInventory();
-            }
-            else if (event.getSlot() == 11) {
+            } else if (event.getSlot() == 11) {
                 humanEntity.closeInventory();
                 humanEntity.openInventory(mute.MuteUI());
-            }
-            else if (event.getSlot() == 13) {
+            } else if (event.getSlot() == 13) {
                 humanEntity.closeInventory();
                 humanEntity.openInventory(mute.UnmuteUI());
-            }
-            else if (event.getSlot() == 15) {
+            } else if (event.getSlot() == 15) {
                 humanEntity.closeInventory();
                 humanEntity.openInventory(srv.ServerSelectorUI());
             }
-        }
-        else if (event.getView().getTitle().equalsIgnoreCase(ConfigManager.getConfigString("mute.name"))) {
+        } else if (event.getView().getTitle().equalsIgnoreCase(ConfigManager.getConfigString("mute.name"))) {
             event.setCancelled(true);
 
             if (event.getSlot() == 8) {
@@ -82,12 +76,20 @@ public class InventoryClickListener implements Listener {
             if (event.getCurrentItem() == null) {
                 return;
             }
-            if (!event.getCurrentItem().getType().equals(Material.PLAYER_HEAD)) {
-                return;
-            }
 
-            SkullMeta skullMeta = (SkullMeta) event.getCurrentItem().getItemMeta();
-            target = Bukkit.getPlayer(skullMeta.getOwningPlayer().getUniqueId());
+            if (isServer1_18_2OrAbove) {
+                if (!event.getCurrentItem().getType().equals(Material.PLAYER_HEAD)) {
+                    return;
+                }
+
+                SkullMeta skullMeta = (SkullMeta) event.getCurrentItem().getItemMeta();
+                target = Bukkit.getPlayer(skullMeta.getOwningPlayer().getUniqueId());
+            } else {
+                if (!event.getCurrentItem().getType().equals(Material.getMaterial(ConfigManager.getConfigString("mute.fallback-item")))) {
+                    return;
+                }
+                target = Bukkit.getPlayer(event.getCurrentItem().getItemMeta().getDisplayName().substring(4));
+            }
 
             humanEntity.closeInventory();
             mute.ReasonUI(player,target);

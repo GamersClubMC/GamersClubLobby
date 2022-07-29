@@ -1,5 +1,5 @@
 name: GamersClubLobbyPlugin
-version: 2.1.0
+version: 2.1.1
 author: GamersClub
 main: me.gamersclub.lobby.GamersClubMain
 api-version: 1.13
@@ -41,6 +41,9 @@ commands:
     usage: "/help"
   anarchy:
     description: "Command used to join the anarchy server."
+    usage: "/anarchy"
+  anarchy-icd:
+    description: "/anarchy"
     usage: "/anarchy"
   lobby:
     aliases: [hub]
